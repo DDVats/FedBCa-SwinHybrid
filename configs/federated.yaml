@@ -1,0 +1,55 @@
+# Federated training configuration (Sections 3.1 and 4.2).
+#
+# Four clinical centres, all participating in every round, 3 local epochs per
+# round, 50 communication rounds, sample-size-weighted FedAvg, and retention
+# of the global model with the highest validation combined score.
+
+name: swin_hybrid_federated
+
+# --- paths ------------------------------------------------------------------
+preprocessed_root: ${FEDBCA_PREPROCESSED:./data/preprocessed}
+splits_dir: ${FEDBCA_SPLITS:./data/splits}
+output_dir: ${FEDBCA_OUTPUT:./outputs}/federated
+
+# --- federation -------------------------------------------------------------
+num_clients: 4          # one per clinical centre
+num_rounds: 50          # communication rounds T
+local_epochs: 3         # local epochs E per round
+server_address: 0.0.0.0:8080
+checkpoint_every: 10    # numbered global checkpoints, 0 to disable
+
+# --- model ------------------------------------------------------------------
+in_channels: 5
+num_classes: 2
+input_size: 224         # must match the preprocessed data
+use_mixstyle: true
+dropout: 0.15
+pretrained: true
+
+# --- local optimisation -----------------------------------------------------
+lr: 2.0e-5
+enc_lr_ratio: 1.0       # ResNet-34 at the base rate, as in the recorded runs (paper text: 0.15; audit item 6)
+swin_lr_ratio: 0.30
+weight_decay: 1.0e-4
+batch_size: 6
+accum_steps: 4          # effective batch size = 24
+grad_clip: 1.0
+
+# --- loss (Eq. 7) -----------------------------------------------------------
+seg_weight: 0.80
+cls_weight: 0.20
+focal_gamma: 2.0
+mibc_alpha: 1.6
+ds_weights: [0.50, 0.25]
+tversky_weight: 0.20
+
+# --- augmentation -----------------------------------------------------------
+# Selected federated strategy of the paper.
+augmentation: geo_elastic
+
+# --- runtime ----------------------------------------------------------------
+use_amp: false
+# Four clients on one machine: keep data loading in-process to avoid
+# oversubscribing the host with worker processes.
+num_workers: 0
+seed: 42

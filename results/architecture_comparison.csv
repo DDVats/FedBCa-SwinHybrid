@@ -1,0 +1,6 @@
+model,type,dsc,auc,combined
+ResNet50 U-Net,single-task,0.8181,0.8304,0.8236
+EfficientNet-B0 U-Net,single-task,0.7669,0.7589,0.7633
+ResNet50+CBAM,multi-task,0.7579,0.7232,0.7423
+Multi-task EfficientNet-B0,multi-task,0.7653,0.7679,0.7664
+Swin Hybrid,multi-task,0.8088,0.9286,0.8627

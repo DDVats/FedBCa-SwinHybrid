@@ -1,0 +1,48 @@
+# ---- Data: never commit patient data or anything derived from it ----
+data/
+datasets/
+*.npy
+*.npz
+*.nii
+*.nii.gz
+*.dcm
+slice_index.csv
+splits/
+preprocessed/
+
+# ---- Model artefacts ----
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+outputs/
+runs/
+logs/
+predictions/
+cache/
+wandb/
+events.out.tfevents.*
+
+# ---- Local configuration ----
+paths.json
+.env
+*.local.yaml
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.env/
+
+# ---- Notebooks and editors ----
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# ---- OS ----
+.DS_Store
+Thumbs.db

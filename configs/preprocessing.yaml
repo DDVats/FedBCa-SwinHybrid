@@ -1,0 +1,24 @@
+# Client-side preprocessing configuration (Section 3.2).
+#
+# dataset_root must point at a local copy of FedBCa laid out as described in
+# docs/DATASET.md. The dataset is not distributed with this repository.
+
+dataset_root: ${FEDBCA_ROOT}
+output_dir: ${FEDBCA_PREPROCESSED:./data/preprocessed}
+
+# --- harmonisation ----------------------------------------------------------
+apply_n4: false             # optional N4 bias-field correction; not part of the final paper's pipeline
+n4_shrink_factor: 4         # field fitted on a downsampled copy
+n4_iterations: [50, 50, 50, 50]
+
+target_spacing: [0.8, 0.8]  # in-plane resampling, mm (see PAPER_CODE_AUDIT.md)
+clip_percentiles: [0.5, 99.5]
+z_clip: 5.0                 # clip after Z-score normalisation
+
+# --- 2.5D construction ------------------------------------------------------
+n_context_slices: 2         # +/- 2 slices -> 5 input channels
+input_size: 224             # model input, pixels (Swin Hybrid preprocessing variant)
+tumour_padding: 40          # padding around the tumour bounding box, pixels
+n_nontumour_slices: 2       # tumour-free slices sampled per patient
+
+seed: 42

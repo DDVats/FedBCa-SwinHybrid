@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite both the accompanying paper and the
+  FedBCa dataset it was evaluated on.
+title: >-
+  Federated Multi-Task Learning for Bladder Tumor Segmentation and MIBC
+  Classification Using a Hybrid CNN-Transformer Architecture
+abstract: >-
+  Research code for a federated multi-task learning framework that jointly
+  performs bladder tumor segmentation and MIBC/NMIBC classification from
+  T2-weighted MRI across four clinical centers. The proposed Swin Hybrid model
+  combines a ResNet-34 CNN branch with a Swin-Tiny Transformer branch and a
+  segmentation-guided classification mechanism, trained with FedAvg.
+type: software
+license: MIT
+keywords:
+  - federated learning
+  - multi-task learning
+  - medical image segmentation
+  - bladder cancer
+  - MIBC classification
+  - vision transformer
+authors:
+  - family-names: Udmale
+    given-names: Malhar
+    affiliation: Indian Institute of Information Technology Allahabad, Prayagraj, India
+  - family-names: Dwivedi
+    given-names: Divyanshu
+    affiliation: Manipal University Jaipur, Jaipur, India
+  - family-names: Dhand
+    given-names: Aarohi
+    affiliation: Manipal University Jaipur, Jaipur, India
+  - family-names: Dudda Nagaraju
+    given-names: Sachin
+    affiliation: Indian Institute of Information Technology, Bhopal, India
+  - family-names: Rai
+    given-names: Mayank
+    affiliation: Manipal University Jaipur, Jaipur, India
+  - family-names: Kumar
+    given-names: Bagesh
+    affiliation: Manipal University Jaipur, Jaipur, India
+# Publication metadata (venue, year, DOI, pages) is intentionally omitted
+# until the final publication record is available. Please complete it from
+# the version of record rather than adding placeholder values.

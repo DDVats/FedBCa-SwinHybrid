@@ -1,0 +1,54 @@
+# Swin Hybrid - centralised training configuration.
+#
+# Values follow Section 4.2 of the paper. Paths are environment references:
+# set FEDBCA_PREPROCESSED and FEDBCA_OUTPUT, or pass --preprocessed-root /
+# --output-dir on the command line.
+
+name: swin_hybrid
+
+# --- paths ------------------------------------------------------------------
+preprocessed_root: ${FEDBCA_PREPROCESSED:./data/preprocessed}
+splits_dir: ${FEDBCA_SPLITS:./data/splits}
+output_dir: ${FEDBCA_OUTPUT:./outputs}
+
+# --- model ------------------------------------------------------------------
+in_channels: 5          # 2.5D stack: target slice +/- 2
+num_classes: 2          # NMIBC, MIBC
+input_size: 224         # must match the preprocessed data
+use_mixstyle: true      # MixStyle on the ResNet-34 branch
+dropout: 0.15
+pretrained: true        # ImageNet weights via timm
+
+# --- optimiser (Section 4.2) ------------------------------------------------
+lr: 2.0e-5              # base learning rate (decoder and task heads)
+enc_lr_ratio: 1.0       # ResNet-34 at the base rate, as in the recorded runs (paper text: 0.15; audit item 6)
+swin_lr_ratio: 0.30     # Swin-Tiny branch multiplier -> 6.0e-6
+weight_decay: 1.0e-4
+min_lr_ratio: 0.05      # floor of the cosine schedule
+grad_clip: 1.0          # maximum gradient norm
+
+# --- schedule ---------------------------------------------------------------
+epochs: 250
+batch_size: 6
+accum_steps: 4          # effective batch size = 24
+warmup_epochs: 10
+cls_rampup_epochs: 10   # classification loss at full weight by epoch 20
+patience: 80            # early stopping, in epochs
+eval_every: 5
+
+# --- loss (Eq. 7) -----------------------------------------------------------
+seg_weight: 0.80
+cls_weight: 0.20
+focal_gamma: 2.0
+mibc_alpha: 1.6         # MIBC class weight of the focal cross-entropy
+ds_weights: [0.50, 0.25]
+tversky_weight: 0.20
+
+# --- augmentation -----------------------------------------------------------
+# One of: none, gin_only, stack, geo_elastic, geo_bias, geo_gamma, geo_noise.
+augmentation: geo_elastic
+
+# --- runtime ----------------------------------------------------------------
+use_amp: false          # Swin attention can overflow in FP16; train in FP32
+num_workers: 4
+seed: 42
