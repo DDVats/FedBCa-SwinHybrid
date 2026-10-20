@@ -1,8 +1,8 @@
 # Federated Multi-Task Learning for Bladder Tumor Segmentation and MIBC Classification
 
-Research code for the accepted paper *"Federated Multi-Task Learning for
+Research code for the accepted paper _"Federated Multi-Task Learning for
 Bladder Tumor Segmentation and MIBC Classification Using a Hybrid
-CNN-Transformer Architecture"*.
+CNN-Transformer Architecture"_.
 
 > This repository contains research code only. It does not distribute medical
 > data and does not provide clinical diagnosis. The FedBCa dataset must be
@@ -42,13 +42,13 @@ a clinical tool and is not a substitute for a clinician's assessment.
 
 ## 2. Key contributions
 
-* **Federated multi-task framework.** FedAvg over four heterogeneous clinical
+- **Federated multi-task framework.** FedAvg over four heterogeneous clinical
   centres, jointly optimising tumour segmentation and MIBC classification
   without sharing patient data.
-* **Swin Hybrid architecture.** A dual-stream encoder combining a pretrained
+- **Swin Hybrid architecture.** A dual-stream encoder combining a pretrained
   ResNet-34 CNN branch with a Swin-Tiny Transformer branch, connected to a
   segmentation-guided attention mechanism for classification.
-* **Augmentation study for scanner heterogeneity.** A systematic comparison of
+- **Augmentation study for scanner heterogeneity.** A systematic comparison of
   augmentation strategies under both centralised and federated training,
   identifying elastic deformation combined with geometric transforms as the
   strategy that best survives the move to federated training.
@@ -82,12 +82,12 @@ Figure 1 of the paper: the federated framework (A), the Swin Hybrid architecture
 FedBCa: **275 T2-weighted MRI scans** from **four medical centres**, each with
 a pixel-level tumour segmentation mask and a pathological MIBC/NMIBC label.
 
-| Centre | Scans | NMIBC | MIBC |
-|---|---|---|---|
-| Center 1 | 160 | 130 | 30 |
-| Center 2 | 48 | 23 | 25 |
-| Center 3 | 32 | 19 | 13 |
-| Center 4 | 35 | 18 | 17 |
+| Centre    | Scans   | NMIBC   | MIBC   |
+| --------- | ------- | ------- | ------ |
+| Center 1  | 160     | 130     | 30     |
+| Center 2  | 48      | 23      | 25     |
+| Center 3  | 32      | 19      | 13     |
+| Center 4  | 35      | 18      | 17     |
 | **Total** | **275** | **190** | **85** |
 
 The dataset is **not** included in this repository. See
@@ -117,16 +117,16 @@ tensor to both branches, at `input_size` (224 by default). See
 
 ## 6. Model
 
-| Component | Implementation |
-|---|---|
-| Input | 2.5D stack, 5 channels, 224 x 224 |
-| Input adapter | 1x1 convolution, 5 -> 3 channels, mean-initialised |
-| CNN branch | ImageNet-pretrained ResNet-34, frozen BatchNorm, MixStyle |
-| Transformer branch | ImageNet-pretrained Swin-Tiny |
-| Fusion | concatenation + 1x1 projection of the intermediate features |
-| Segmentation head | attention-gated decoder with deep supervision at two depths |
-| Classification head | segmentation-guided attention pooling + MLP |
-| Objective | `L = 0.80 L_seg + 0.20 L_cls` |
+| Component           | Implementation                                              |
+| ------------------- | ----------------------------------------------------------- |
+| Input               | 2.5D stack, 5 channels, 224 x 224                           |
+| Input adapter       | 1x1 convolution, 5 -> 3 channels, mean-initialised          |
+| CNN branch          | ImageNet-pretrained ResNet-34, frozen BatchNorm, MixStyle   |
+| Transformer branch  | ImageNet-pretrained Swin-Tiny                               |
+| Fusion              | concatenation + 1x1 projection of the intermediate features |
+| Segmentation head   | attention-gated decoder with deep supervision at two depths |
+| Classification head | segmentation-guided attention pooling + MLP                 |
+| Objective           | `L = 0.80 L_seg + 0.20 L_cls`                               |
 
 `L_seg` combines Dice, binary cross-entropy, Focal Tversky and a boundary term,
 plus the auxiliary deep-supervision terms. `L_cls` is a focal cross-entropy,
@@ -140,14 +140,14 @@ this difference is documented in `docs/PAPER_CODE_AUDIT.md`.
 
 ## 7. Federated learning
 
-| Setting | Value |
-|---|---|
-| Clients | 4, one per clinical centre |
-| Participation | all four clients in every round |
-| Local epochs per round | 3 |
-| Communication rounds | 50 |
-| Aggregation | sample-size-weighted FedAvg |
-| Model selection | highest validation combined score |
+| Setting                | Value                             |
+| ---------------------- | --------------------------------- |
+| Clients                | 4, one per clinical centre        |
+| Participation          | all four clients in every round   |
+| Local epochs per round | 3                                 |
+| Communication rounds   | 50                                |
+| Aggregation            | sample-size-weighted FedAvg       |
+| Model selection        | highest validation combined score |
 
 Only model parameters cross the network; images, masks and labels stay at the
 centre that holds them.
@@ -168,11 +168,11 @@ needed to run it.
 
 ## 9. Evaluation
 
-* **DSC** - Dice Similarity Coefficient, on slices with a non-empty
+- **DSC** - Dice Similarity Coefficient, on slices with a non-empty
   ground-truth tumour mask.
-* **AUC** - at the patient level, after averaging the slice-level MIBC
+- **AUC** - at the patient level, after averaging the slice-level MIBC
   probabilities of each patient.
-* **Combined score** - `S_comb = 0.55 * DSC + 0.45 * AUC`, used for model
+- **Combined score** - `S_comb = 0.55 * DSC + 0.45 * AUC`, used for model
   selection; DSC and AUC are reported separately.
 
 ```bash
@@ -188,13 +188,13 @@ All numbers are those reported in the accepted paper. See
 
 **Centralised architecture comparison**
 
-| Model | DSC | AUC | Combined |
-|---|---|---|---|
-| ResNet50 U-Net | **0.8181** | 0.8304 | 0.8236 |
-| EfficientNet-B0 U-Net | 0.7669 | 0.7589 | 0.7633 |
-| ResNet50+CBAM | 0.7579 | 0.7232 | 0.7423 |
-| Multi-task EfficientNet-B0 | 0.7653 | 0.7679 | 0.7664 |
-| **Swin Hybrid (proposed)** | 0.8088 | **0.9286** | **0.8627** |
+| Model                      | DSC        | AUC        | Combined   |
+| -------------------------- | ---------- | ---------- | ---------- |
+| ResNet50 U-Net             | **0.8181** | 0.8304     | 0.8236     |
+| EfficientNet-B0 U-Net      | 0.7669     | 0.7589     | 0.7633     |
+| ResNet50+CBAM              | 0.7579     | 0.7232     | 0.7423     |
+| Multi-task EfficientNet-B0 | 0.7653     | 0.7679     | 0.7664     |
+| **Swin Hybrid (proposed)** | 0.8088     | **0.9286** | **0.8627** |
 
 The Swin Hybrid gives the best patient-level AUC and combined score; the
 single-task ResNet50 U-Net has the highest DSC. The Swin Hybrid was taken
@@ -202,15 +202,15 @@ forward to the augmentation study.
 
 **Augmentation comparison (Swin Hybrid)**
 
-| Augmentation | Cen. DSC | Cen. AUC | Cen. Comb. | Fed. DSC | Fed. AUC | Fed. Comb. |
-|---|---|---|---|---|---|---|
-| None | 0.8088 | **0.9286** | 0.8627 | 0.7908 | 0.7716 | 0.7822 |
-| GIN Only | 0.8161 | 0.8750 | 0.8426 | 0.7790 | 0.7270 | 0.7560 |
-| Augmentation Stack | **0.8487** | 0.8661 | 0.8565 | **0.8220** | 0.8230 | 0.8225 |
-| **Geo+Elastic** | 0.8272 | 0.9196 | **0.8688** | 0.8100 | **0.8931** | **0.8474** |
-| Geo+Bias | 0.8391 | 0.8661 | 0.8513 | 0.8094 | 0.8414 | 0.8238 |
-| Geo+Gamma | 0.8417 | 0.8750 | 0.8567 | 0.7987 | 0.8575 | 0.8252 |
-| Geo+Noise | 0.8398 | 0.8750 | 0.8556 | 0.8108 | 0.8240 | 0.8167 |
+| Augmentation       | Cen. DSC   | Cen. AUC   | Cen. Comb. | Fed. DSC   | Fed. AUC   | Fed. Comb. |
+| ------------------ | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| None               | 0.8088     | **0.9286** | 0.8627     | 0.7908     | 0.7716     | 0.7822     |
+| GIN Only           | 0.8161     | 0.8750     | 0.8426     | 0.7790     | 0.7270     | 0.7560     |
+| Augmentation Stack | **0.8487** | 0.8661     | 0.8565     | **0.8220** | 0.8230     | 0.8225     |
+| **Geo+Elastic**    | 0.8272     | 0.9196     | **0.8688** | 0.8100     | **0.8931** | **0.8474** |
+| Geo+Bias           | 0.8391     | 0.8661     | 0.8513     | 0.8094     | 0.8414     | 0.8238     |
+| Geo+Gamma          | 0.8417     | 0.8750     | 0.8567     | 0.7987     | 0.8575     | 0.8252     |
+| Geo+Noise          | 0.8398     | 0.8750     | 0.8556     | 0.8108     | 0.8240     | 0.8167     |
 
 Table values are copied from the paper; their provenance is discussed in
 [`docs/PAPER_CODE_AUDIT.md`](docs/PAPER_CODE_AUDIT.md) (item 9). Under federated
@@ -222,8 +222,6 @@ patient-level AUC of 0.8931, for the highest combined score of 0.8474.
 ```
 FedBCa-SwinHybrid-CVIP/
 ├── README.md
-├── LICENSE
-├── CITATION.cff
 ├── requirements.txt
 ├── .gitignore
 │
@@ -252,8 +250,6 @@ FedBCa-SwinHybrid-CVIP/
 │   └── federated_client.py      One client, centre given by --center
 │
 ├── docs/                        Dataset, reproducibility, paper-code audit
-└── examples/
-    └── demo_inference.py        Single-slice inference demonstration
 ```
 
 ## 12. Installation
