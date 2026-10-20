@@ -251,7 +251,6 @@ FedBCa-SwinHybrid-CVIP/
 │   ├── federated_server.py      FedAvg server
 │   └── federated_client.py      One client, centre given by --center
 │
-├── results/                     Published result tables
 ├── docs/                        Dataset, reproducibility, paper-code audit
 └── examples/
     └── demo_inference.py        Single-slice inference demonstration
@@ -321,91 +320,3 @@ each client reads only its own centre's slices. Clients may run on separate
 machines by pointing `--server-address` at the server's host and port. The
 server writes `round_metrics.csv` and keeps the best global model as
 `global_model_best.npz`, which `scripts/evaluate.py` reads directly.
-
-## 15. Reproducibility
-
-The full protocol, the hardware the experiments ran on and the model-selection
-rule are in [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md).
-
-This repository is **code-ready for GitHub publication**: the method, the
-training protocol and the evaluation are fully specified and runnable. It is
-not self-contained for reproduction. FedBCa is not distributed here, so the
-published numbers cannot be regenerated from this repository alone, and no
-trained checkpoints are included. With the dataset in place, expect results
-near the published ones rather than identical to them; the reasons are set out
-in `docs/REPRODUCIBILITY.md` and `docs/PAPER_CODE_AUDIT.md`.
-
-## 16. Limitations
-
-* **Scale.** 275 scans across four centres is small for a deep model, and the
-  centres are unbalanced: Centre 1 holds 160 of them. Per-centre metrics on
-  the smaller sites rest on very few patients.
-* **Class imbalance.** 85 MIBC against 190 NMIBC cases, with the MIBC share
-  ranging from about 19% to about 52% across centres. Patient-level AUC on a
-  small validation fold moves considerably with a single case.
-* **Simulated federation.** The four clients model four centres but were run
-  in one controlled environment. Real deployments add communication failures,
-  stragglers, version skew and governance constraints that this setup does not
-  exercise.
-* **Single dataset, single modality.** Only T2-weighted MRI from FedBCa was
-  evaluated. Generalisation to other cohorts, scanners or sequences is untested.
-* **Preprocessing uses the mask.** The ROI crop is centred on the ground-truth
-  tumour bounding box. The mask is never a model input, but a deployment
-  setting would need a tumour localisation step to produce the same crop.
-* **No external validation and no clinical evaluation.** The framework has not
-  been validated prospectively, on an external cohort, or against reader
-  performance. It is a research framework for automated analysis and
-  prediction, not a diagnostic device, and it is not clinically approved or
-  clinically deployable.
-* **Documented paper-code differences.** Several are listed in
-  `docs/PAPER_CODE_AUDIT.md` and should be read before building on this code.
-
-## 17. Citation
-
-If you use this code, please cite the paper. `CITATION.cff` carries the
-machine-readable metadata.
-
-```bibtex
-@inproceedings{udmale_federated_swin_hybrid,
-  title     = {Federated Multi-Task Learning for Bladder Tumor Segmentation
-               and {MIBC} Classification Using a Hybrid {CNN}-Transformer
-               Architecture},
-  author    = {Udmale, Malhar and Dwivedi, Divyanshu and Dhand, Aarohi and
-               Dudda Nagaraju, Sachin and Rai, Mayank and Kumar, Bagesh}
-}
-```
-
-Publication venue, year, DOI and page numbers are deliberately omitted until
-the final publication record is available; please complete them from the
-version of record rather than assuming the values above are complete.
-
-Please also cite the FedBCa dataset:
-
-```bibtex
-@article{cao2024fedbca,
-  title   = {A multicenter bladder cancer {MRI} dataset and baseline evaluation
-             of federated learning in clinical application},
-  author  = {Cao, Kai and Zou, Yunqi and Zhang, Chunhong and Zhang, Weibin and
-             Zhang, Jingyu and Wang, Gang and Zhang, Chun and Lyu, Jun and
-             Sun, Yan and Zhang, Hao and others},
-  journal = {Scientific Data},
-  volume  = {11},
-  number  = {1},
-  pages   = {1147},
-  year    = {2024}
-}
-```
-
-## 18. License
-
-The code in this repository is released under the MIT License; see
-[`LICENSE`](LICENSE).
-
-The licence covers this repository's own source code only. It does not extend
-to:
-
-* **the FedBCa dataset**, which is governed by the terms of its own
-  publication and distribution;
-* **the pretrained backbones** (ResNet-34 and Swin-Tiny, obtained through
-  `timm`), which carry their own upstream licences;
-* **the paper**, whose reuse is governed by the publication agreement.
